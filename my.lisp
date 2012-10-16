@@ -3,9 +3,11 @@
 (defun cl-trimn (str init)
   (if (string-equal str "")
       nil
-      (if (char-equal (aref str 0) #\ )
+      (if (or (char-equal (aref str 0) #\space)
+	      (char-equal (aref str 0) #\tab))
 	  (cl-trimn (subseq str 1) init)
-	  (if (char-equal (aref str (- (length str) 1)) #\ )
+	  (if (or (char-equal (aref str (- (length str) 1)) #\space)
+		  (char-equal (aref str (- (length str) 1)) #\tab))
 	      (cl-trimn (reverse str) 1)
 	      (if (= init 1)
 		  (reverse str)
