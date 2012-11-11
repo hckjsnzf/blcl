@@ -18,3 +18,49 @@
       (format t "~a not a string. ~a ~%"
 	      str (type-of str))))
 
+
+
+
+
+
+
+(defun is-char-space (x)
+  (if (or (char-equal x #\tab)
+	  (char-equal x #\ ))
+      x
+      nil))
+(defun words (sent)
+  "take a long string, out is a list,
+every element of this list is a word"
+  (labels ((words-by (sent beg end len)
+	     (if (= end len)
+		 (if (= beg end)
+		     nil
+		     (cons (subseq sent beg end) nil))
+		 (if (and (is-char-space (aref sent end))
+			  (/= beg end))
+		     (cons (subseq sent beg end)
+			   (words-by sent (1+ end) (1+ end) len))
+		     (if (and (is-char-space (aref sent beg))
+			      (is-char-space (aref sent end)))
+			 (words-by sent (1+ end) (1+ end) len)
+			 (words-by sent beg (1+ end) len))))))
+    (words-by sent 0 0 (length sent))))
+
+
+	       
+(defun lines (sent)
+  "take a long string, out is a list,
+every element of this list a line"
+  (labels ((lines-by (sent beg end len)
+	     (if (= end len)
+		 (cons (subseq sent beg) nil)
+		 (if (char-equal (aref sent end)
+				 #\newline)
+		     (cons (subseq sent beg end)
+			   (lines-by sent (1+ end) (1+ end) len))
+		     (lines-by sent beg (1+ end) len)))))
+    (lines-by sent 0 0 (length sent))))
+
+
+
